@@ -78,7 +78,7 @@ nnoremap <leader>gf <cmd>tab split \| :Glog -- %<CR>
 nnoremap <leader>gs :G<CR>
 nnoremap <leader>ga :G add<CR>
 nnoremap <leader>gc :G commit<CR>
-nnoremap <leader>gp :G push<CR>
+nnoremap <leader>gp :G -c push.default=current push<CR>
 nnoremap <leader>gh :diffget //2<CR>
 nnoremap <leader>gl :diffget //3<CR>
 
@@ -112,13 +112,15 @@ Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'}
 Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-lua/completion-nvim'
 
+Plug 'yggdroot/indentline'
+
 " Track the engine.
 " Plug 'SirVer/ultisnips'
 
 " Snippets are separated from the engine. Add this if you want them:
 " Plug 'honza/vim-snippets'
 
-" Plug 'puremourning/vimspector' debugger not yet needed
+" Plug 'puremourning/vimspector' debugger not needed yet
 
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
@@ -163,6 +165,8 @@ let g:rainbow_active = 1
 let g:rainbow_conf = {'separately': {'nerdtree': 0}}
 let g:completion_enable_auto_paren = 1
 " let g:completion_enable_snippet = 'UltiSnips'
+
+let g:indentLine_char_list = ['|', '¦', '┆', '┊']
 
 " open vertical git diff split in new tab
 au User FugitiveIndex nmap <buffer> dt :Gtabedit <Plug><cfile><Bar>Gvdiffsplit<CR>
