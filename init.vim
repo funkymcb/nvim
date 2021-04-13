@@ -21,7 +21,6 @@ set inccommand=nosplit
 set foldmethod=manual
 set updatetime=100
 set mouse=a
-set conceallevel=0
 
 let mapleader=" "
 nnoremap <SPACE> <Nop>
@@ -167,6 +166,8 @@ let g:completion_enable_auto_paren = 1
 " let g:completion_enable_snippet = 'UltiSnips'
 
 let g:indentLine_char_list = ['|', '¦', '┆', '┊']
+let g:indentLine_setConceal = 2
+let g:indentLine_concealcursor=""
 
 " open vertical git diff split in new tab
 au User FugitiveIndex nmap <buffer> dt :Gtabedit <Plug><cfile><Bar>Gvdiffsplit<CR>
