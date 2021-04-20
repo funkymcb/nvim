@@ -25,7 +25,7 @@ set mouse=a
 let mapleader=" "
 nnoremap <SPACE> <Nop>
 
-nnoremap <esc><esc> :silent!nohls<CR>
+nnoremap <leader><leader> :silent!nohls<CR>
 nnoremap j gj
 nnoremap k gk
 nnoremap G Gzz
@@ -183,6 +183,15 @@ augroup FUNKY
     autocmd!
     autocmd BufWritePre * :call TrimWhitespace()
 augroup END
+
+"presentation stuff BEGIN
+autocmd BufNewFile,BufRead *.vpm call SetVimPresentationMode()
+function SetVimPresentationMode()
+    nnoremap <silent> <buffer> <Right> :n<CR>
+    nnoremap <silent> <buffer> <Left> :N<CR>
+endfunction
+nmap <silent> <F5> :set colorcolumn= laststatus=0 relativenumber! number! showmode! showcmd! hidden! ruler!<CR><bar> :AirlineToggle<CR>
+"presentation stuff END
 
 " telescope setup funcion
 lua << EOF
