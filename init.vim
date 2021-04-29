@@ -41,13 +41,14 @@ nnoremap <C-L> <C-W><C-L>
 nnoremap <leader>q :q<CR>
 nnoremap <leader>w :w<CR>
 nnoremap <leader>W :wq<CR>
+nnoremap <leader>a vec"<C-r>""<esc>
 nnoremap <C-q> :tabclose<CR>
 nnoremap <C-f> :NERDTreeToggle<CR>
 nnoremap <Leader>ff :lua require('telescope.builtin').find_files()<CR>
 nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
 nnoremap <leader>fb <cmd>lua require('telescope.builtin').buffers()<cr>
 
-nnoremap <silent> <leader>t :sp <CR><bar> :term <CR><bar> :resize 12<CR>
+nnoremap <silent> <leader>t :sp <CR><bar> :term <CR><bar> :resize 20<CR>
 nnoremap <silent> <leader>r :res 12<CR>
 
 " format JSON files (jq needs to be installed)
@@ -190,7 +191,7 @@ function SetVimPresentationMode()
     nnoremap <silent> <buffer> <Right> :n<CR>
     nnoremap <silent> <buffer> <Left> :N<CR>
 endfunction
-nmap <silent> <F5> :set colorcolumn= laststatus=0 relativenumber! number! showmode! showcmd! hidden! ruler!<CR><bar> :AirlineToggle<CR>
+nmap <silent> <F5> :set colorcolumn=138 laststatus=0 relativenumber! number! showmode! showcmd! hidden! ruler!<CR><bar> :AirlineToggle<CR><bar> :IndentLinesToggle<CR>
 "presentation stuff END
 
 " telescope setup funcion
