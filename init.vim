@@ -48,6 +48,9 @@ nnoremap <Leader>ff :lua require('telescope.builtin').find_files()<CR>
 nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
 nnoremap <leader>fb <cmd>lua require('telescope.builtin').buffers()<cr>
 
+" html coding
+nnoremap <leader>< yiwi<<esc>ea></<esc>pa><esc>cit
+
 nnoremap <silent> <leader>t :sp <CR><bar> :term <CR><bar> :resize 20<CR>
 nnoremap <silent> <leader>r :res 12<CR>
 
@@ -92,7 +95,7 @@ vnoremap <silent> <leader>be c<c-r>=system('base64', @")<cr><esc>kJ
 vnoremap <silent> <leader>bd c<c-r>=system('base64 --decode', @")<cr><esc>
 
 " ctrl-q to exit out of terminal
-tnoremap <C-q> <C-\><C-n>
+tnoremap <leader><esc> <C-\><C-n>
 
 call plug#begin('~/.vim/plugged')
 
@@ -133,6 +136,8 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-telescope/telescope-fzy-native.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
+
+Plug 'pprovost/vim-ps1'
 
 call plug#end()
 
@@ -175,6 +180,11 @@ au User FugitiveIndex nmap <buffer> dt :Gtabedit <Plug><cfile><Bar>Gvdiffsplit<C
 
 " trim whitespaces on save
 fun! TrimWhitespace()
+    "Don't trim in markdown files
+    if &ft =~ 'markdown'
+        return
+    endif
+
     let l:save = winsaveview()
     keeppatterns %s/\s\+$//e
     call winrestview(l:save)
@@ -230,7 +240,9 @@ require'lspconfig'.yamlls.setup{
     on_attach = require'completion'.on_attach,
     settings = {
         yaml = {
-            schemas = { kubernetes = "/*.yaml" },
+            schemas = {
+                kubernetes = "/*.yaml"
+            },
         }
     }
 }
