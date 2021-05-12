@@ -49,7 +49,8 @@ nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
 nnoremap <leader>fb <cmd>lua require('telescope.builtin').buffers()<cr>
 
 " html coding
-nnoremap <leader>< yiwi<<esc>ea></<esc>pa><esc>cit
+nnoremap <leader><i yiwi<<esc>ea></<esc>pa><esc>cit
+nnoremap <leader><<CR> yiwi<<esc>ea></<esc>pa><esc>cit<CR><esc>O
 
 nnoremap <silent> <leader>t :sp <CR><bar> :term <CR><bar> :resize 20<CR>
 nnoremap <silent> <leader>r :res 12<CR>
