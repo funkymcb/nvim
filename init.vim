@@ -52,6 +52,9 @@ nnoremap <leader>fb <cmd>lua require('telescope.builtin').buffers()<cr>
 nnoremap <leader><i yiwi<<esc>ea></<esc>pa><esc>cit
 nnoremap <leader><<CR> yiwi<<esc>ea></<esc>pa><esc>cit<CR><esc>O
 
+" go snippets
+nnoremap <leader>e iif err != nil {<CR>}<esc>O
+
 nnoremap <silent> <leader>t :sp <CR><bar> :term <CR><bar> :resize 20<CR>
 nnoremap <silent> <leader>r :res 12<CR>
 
