@@ -152,7 +152,9 @@ filetype plugin indent on
 autocmd BufEnter * lua require'completion'.on_attach()
 
 " Setup lsp for golang (gpls language server has to be installed)
-lua require'lspconfig'.gopls.setup{ on_attach=require'completion'.on_attach }
+lua require'lspconfig'.gopls.setup{ cmd={'gopls','--remote=auto'}, on_attach=require'completion'.on_attach }
+" let g:go_def_mode='gopls'
+" let g:go_info_mode='gopls'
 
 au! BufNewFile,BufReadPost *.{yaml,yml} set filetype=yaml
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
