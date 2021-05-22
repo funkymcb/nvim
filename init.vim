@@ -53,7 +53,7 @@ nnoremap <leader><i yiwi<<esc>ea></<esc>pa><esc>cit
 nnoremap <leader><<CR> yiwi<<esc>ea></<esc>pa><esc>cit<CR><esc>O
 
 " go snippets
-nnoremap <leader>e iif err != nil {<CR>}<esc>O
+nnoremap <leader>e iif err != nil {<CR>}<esc>v%=o
 
 nnoremap <silent> <leader>t :sp <CR><bar> :term <CR><bar> :resize 20<CR>
 nnoremap <silent> <leader>r :res 12<CR>
@@ -152,9 +152,13 @@ filetype plugin indent on
 autocmd BufEnter * lua require'completion'.on_attach()
 
 " Setup lsp for golang (gpls language server has to be installed)
-lua require'lspconfig'.gopls.setup{ cmd={'gopls','--remote=auto'}, on_attach=require'completion'.on_attach }
+" lua require'lspconfig'.gopls.setup{ cmd={'gopls','--remote=auto'}, on_attach=require'completion'.on_attach }
 " let g:go_def_mode='gopls'
 " let g:go_info_mode='gopls'
+
+lua require'lspconfig'.gopls.setup{ on_attach=require'completion'.on_attach }
+" Setup lsp for java (java-language-server language server has to be installed)
+" lua require'lspconfig'.java-language-server.setup{ on_attach=require'completion'.on_attach }
 
 au! BufNewFile,BufReadPost *.{yaml,yml} set filetype=yaml
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
