@@ -41,16 +41,11 @@ nnoremap <C-L> <C-W><C-L>
 nnoremap <leader>q :q<CR>
 nnoremap <leader>w :w<CR>
 nnoremap <leader>W :wq<CR>
-nnoremap <leader>a vec"<C-r>""<esc>
 nnoremap <C-q> :tabclose<CR>
 nnoremap <C-f> :NERDTreeToggle<CR>
 nnoremap <Leader>ff :lua require('telescope.builtin').find_files()<CR>
 nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
 nnoremap <leader>fb <cmd>lua require('telescope.builtin').buffers()<cr>
-
-" html coding
-nnoremap <leader><i yiwi<<esc>ea></<esc>pa><esc>cit
-nnoremap <leader><<CR> yiwi<<esc>ea></<esc>pa><esc>cit<CR><esc>O
 
 " go snippets
 nnoremap <leader>e iif err != nil {<CR>}<esc>v%=o
@@ -63,19 +58,13 @@ nnoremap <leader>jf :%!jq .<cr>
 nnoremap <leader>z zf%
 nnoremap <leader>o zo
 
-" resizing works for mac only
-" resize with <OPTION-hjkl>
-nnoremap º :resize -2<CR>
-nnoremap ∆ :resize +2<CR>
-nnoremap ª :vertical resize +2<CR>
-nnoremap @ :vertical resize -2<CR>
-
 nnoremap <leader>gd <cmd>lua vim.lsp.buf.definition()<CR>
 nnoremap <leader>gdt <cmd>tab split \| lua vim.lsp.buf.definition()<CR>
 nnoremap <leader>i <cmd>lua vim.lsp.buf.implementation()<CR>
 nnoremap <leader>d <cmd>lua vim.lsp.buf.hover()<CR>
 nnoremap <leader>n <cmd>lua vim.lsp.diagnostic.goto_next()<CR>
 nnoremap <leader>p <cmd>lua vim.lsp.diagnostic.goto_prev()<CR>
+
 nnoremap <leader>ut :UndotreeToggle<CR>
 
 nnoremap <leader>glh :GitGutterLineHighlightsToggle<CR>
@@ -89,16 +78,12 @@ nnoremap <leader>gp :G -c push.default=current push<CR>
 nnoremap <leader>gh :diffget //2<CR>
 nnoremap <leader>gl :diffget //3<CR>
 
-"  use tab to cycle through completions
-inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-
 vnoremap <C-y> "+y
 "Base 64 encoding/decoding might only work like this on a mac
 vnoremap <silent> <leader>be c<c-r>=system('base64', @")<cr><esc>kJ
 vnoremap <silent> <leader>bd c<c-r>=system('base64 --decode', @")<cr><esc>
 
-" ctrl-q to exit out of terminal
+" space-esc to exit out of terminal
 tnoremap <leader><esc> <C-\><C-n>
 
 call plug#begin('~/.vim/plugged')
@@ -117,15 +102,18 @@ Plug 'luochen1990/rainbow'
 
 Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'}
 Plug 'neovim/nvim-lspconfig'
-Plug 'nvim-lua/completion-nvim'
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-path'
+Plug 'hrsh7th/nvim-cmp'
+
+Plug 'hrsh7th/cmp-vsnip'
+Plug 'hrsh7th/vim-vsnip'
 
 Plug 'yggdroot/indentline'
 
 " Track the engine.
 " Plug 'SirVer/ultisnips'
-
-" Snippets are separated from the engine. Add this if you want them:
-" Plug 'honza/vim-snippets'
 
 " Plug 'puremourning/vimspector' debugger not needed yet
 
@@ -148,18 +136,6 @@ call plug#end()
 " activate different indent behavious by filetypes
 filetype plugin indent on
 
-" completion in every buffer
-autocmd BufEnter * lua require'completion'.on_attach()
-
-" Setup lsp for golang (gpls language server has to be installed)
-" lua require'lspconfig'.gopls.setup{ cmd={'gopls','--remote=auto'}, on_attach=require'completion'.on_attach }
-" let g:go_def_mode='gopls'
-" let g:go_info_mode='gopls'
-
-lua require'lspconfig'.gopls.setup{ on_attach=require'completion'.on_attach }
-" Setup lsp for java (java-language-server language server has to be installed)
-" lua require'lspconfig'.java-language-server.setup{ on_attach=require'completion'.on_attach }
-
 au! BufNewFile,BufReadPost *.{yaml,yml} set filetype=yaml
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
 
@@ -173,13 +149,11 @@ colorscheme gruvbox
 highlight Normal ctermbg=none guibg=none
 let g:airline_theme='deus'
 let g:airline_powerline_fonts = 1
-let g:aitline#extensions#branch#enabled = 1
+let g:airline#extensions#branch#enabled = 1
 
 let g:go_fmt_command = "goimports"
 let g:rainbow_active = 1
 let g:rainbow_conf = {'separately': {'nerdtree': 0}}
-let g:completion_enable_auto_paren = 1
-" let g:completion_enable_snippet = 'UltiSnips'
 
 let g:indentLine_char_list = ['|', '¦', '┆', '┊']
 let g:indentLine_setConceal = 2
@@ -244,16 +218,62 @@ require('telescope').setup {
 require('telescope').load_extension('fzy_native')
 EOF
 
-" kubernetes yaml setup
-lua << EOF
-require'lspconfig'.yamlls.setup{
-    on_attach = require'completion'.on_attach,
-    settings = {
-        yaml = {
-            schemas = {
-                kubernetes = "/*.yaml"
-            },
-        }
+lua <<EOF
+  -- Setup nvim-cmp.
+  local cmp = require'cmp'
+
+  cmp.setup({
+    snippet = {
+      expand = function(args)
+        -- For `vsnip` user.
+        vim.fn["vsnip#anonymous"](args.body)
+
+        -- For `luasnip` user.
+        -- require('luasnip').lsp_expand(args.body)
+
+        -- For `ultisnips` user.
+        -- vim.fn["UltiSnips#Anon"](args.body)
+      end,
+    },
+    mapping = {
+      ['<Tab>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
+      ['<S-Tab>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
+      ['<C-u>'] = cmp.mapping.scroll_docs(-4),
+      ['<C-d>'] = cmp.mapping.scroll_docs(4),
+      --['<C-o>'] = cmp.mapping.complete(),
+      ['<Left>'] = cmp.mapping.abort(),
+      ['<C-c>'] = cmp.mapping.close(),
+      ['<CR>'] = cmp.mapping.confirm({
+        behavior = cmp.ConfirmBehavior.Insert,
+        select = true,
+      }),
+  },
+    sources = {
+      { name = 'nvim_lsp' },
+      { name = 'vsnip' },
+      { name = 'path' },
+      { name = 'buffer', keyword_length = 5 },
     }
-}
+  })
+
+  local function config(_config)
+    return vim.tbl_deep_extend("force", {
+        capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+    }, _config or {})
+  end
+
+  -- go lsp setting
+  require'lspconfig'.gopls.setup(config({
+    cmd = {"gopls", "serve"},
+    settings = {
+        gopls = {
+            analyses = {
+                unusedparams = true,
+            },
+            staticcheck = true,
+        },
+    },
+}))
+  require'lspconfig'.yamlls.setup(config())
+  require'lspconfig'.pylsp.setup(config())
 EOF
