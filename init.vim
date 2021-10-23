@@ -45,6 +45,8 @@ nnoremap <C-q> :tabclose<CR>
 nnoremap <C-f> :NERDTreeToggle<CR>
 nnoremap <Leader>ff :lua require('telescope.builtin').find_files()<CR>
 nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
+nnoremap <leader>fm <cmd>lua require('telescope.builtin').marks()<cr>
+nnoremap <leader>fc <cmd>lua require('telescope.builtin').git_commits()<cr>
 nnoremap <leader>fb <cmd>lua require('telescope.builtin').buffers()<cr>
 
 " go snippets
@@ -66,6 +68,9 @@ nnoremap <leader>n <cmd>lua vim.lsp.diagnostic.goto_next()<CR>
 nnoremap <leader>p <cmd>lua vim.lsp.diagnostic.goto_prev()<CR>
 
 nnoremap <leader>ut :UndotreeToggle<CR>
+
+nnoremap <leader>gt :GoCoverageToggle<CR>
+nnoremap <leader>gat :GoAddTags<CR>
 
 nnoremap <leader>glh :GitGutterLineHighlightsToggle<CR>
 map <leader>gj <Plug>(GitGutterNextHunk)
@@ -106,6 +111,7 @@ Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/nvim-cmp'
+Plug 'ray-x/lsp_signature.nvim'
 
 Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/vim-vsnip'
@@ -122,6 +128,7 @@ Plug 'airblade/vim-gitgutter'
 
 Plug 'tpope/vim-commentary'
 Plug 'jiangmiao/auto-pairs'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
@@ -263,6 +270,9 @@ lua <<EOF
   end
 
   -- go lsp setting
+  require "lsp_signature".setup({
+    hi_parameter = "IncSearch", --TODO find better highlight scheme
+  })  -- Note: add in lsp client on-attach
   require'lspconfig'.gopls.setup(config({
     cmd = {"gopls", "serve"},
     settings = {
@@ -273,7 +283,20 @@ lua <<EOF
             staticcheck = true,
         },
     },
+    require "lsp_signature".on_attach()  -- Note: add in lsp client on-attach
 }))
   require'lspconfig'.yamlls.setup(config())
   require'lspconfig'.pylsp.setup(config())
+EOF
+
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = "maintained",
+  ignore_install = { "gdscript", "teal", "godotResource" }, -- buggy
+  highlight = {
+    enable = true,
+    disable = { "c", "rust" },
+    additional_vim_regex_highlighting = false,
+  },
+}
 EOF
