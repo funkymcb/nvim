@@ -271,7 +271,7 @@ lua <<EOF
 
   -- go lsp setting
   require "lsp_signature".setup({
-    hi_parameter = "IncSearch", --TODO find better highlight scheme
+    hi_parameter = "DiffAdd", --TODO find better highlight scheme
   })  -- Note: add in lsp client on-attach
   require'lspconfig'.gopls.setup(config({
     cmd = {"gopls", "serve"},
