@@ -15,6 +15,7 @@ set incsearch
 set hls
 set nrformats=octal
 set nowrap
+set nowrapscan
 set scrolloff=10
 set colorcolumn=80
 set inccommand=nosplit
@@ -24,6 +25,10 @@ set mouse=a
 
 let mapleader=" "
 nnoremap <SPACE> <Nop>
+
+" write with sudo
+cnoremap w!! !sudo tee %
+
 
 nnoremap <leader><leader> :silent!nohls<CR>
 nnoremap j gj
@@ -39,8 +44,11 @@ nnoremap <C-K> <C-W><C-K>
 nnoremap <C-H> <C-W><C-H>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <leader>q :q<CR>
+nnoremap <leader>Q :qa<CR>
 nnoremap <leader>w :w<CR>
 nnoremap <leader>W :wq<CR>
+nnoremap <leader>j :m .+1<CR>
+nnoremap <leader>k :m .-2<CR>
 nnoremap <C-q> :tabclose<CR>
 nnoremap <C-f> :NERDTreeToggle<CR>
 nnoremap <Leader>ff :lua require('telescope.builtin').find_files()<CR>
@@ -56,7 +64,7 @@ nnoremap <silent> <leader>t :sp <CR><bar> :term <CR><bar> :resize 20<CR>
 nnoremap <silent> <leader>r :res 12<CR>
 
 " format JSON files (jq needs to be installed)
-nnoremap <leader>jf :%!jq .<cr>
+nnoremap <leader>fj :%!python3 -m json.tool<cr>
 nnoremap <leader>z zf%
 nnoremap <leader>o zo
 
@@ -64,8 +72,8 @@ nnoremap <leader>gd <cmd>lua vim.lsp.buf.definition()<CR>
 nnoremap <leader>gdt <cmd>tab split \| lua vim.lsp.buf.definition()<CR>
 nnoremap <leader>i <cmd>lua vim.lsp.buf.implementation()<CR>
 nnoremap <leader>d <cmd>lua vim.lsp.buf.hover()<CR>
-nnoremap <leader>n <cmd>lua vim.lsp.diagnostic.goto_next()<CR>
-nnoremap <leader>p <cmd>lua vim.lsp.diagnostic.goto_prev()<CR>
+nnoremap <leader>n <cmd>lua vim.diagnostic.goto_next()<CR>
+nnoremap <leader>p <cmd>lua vim.diagnostic.goto_prev()<CR>
 
 nnoremap <leader>ut :UndotreeToggle<CR>
 
@@ -87,6 +95,10 @@ vnoremap <C-y> "+y
 "Base 64 encoding/decoding might only work like this on a mac
 vnoremap <silent> <leader>be c<c-r>=system('base64', @")<cr><esc>kJ
 vnoremap <silent> <leader>bd c<c-r>=system('base64 --decode', @")<cr><esc>
+
+"move selection up and down
+vnoremap J :m '>+1<CR>gv=gv
+vnoremap K :m '<-2<CR>gv=gv
 
 " space-esc to exit out of terminal
 tnoremap <leader><esc> <C-\><C-n>
@@ -120,8 +132,9 @@ Plug 'yggdroot/indentline'
 
 " Track the engine.
 " Plug 'SirVer/ultisnips'
-
 " Plug 'puremourning/vimspector' debugger not needed yet
+
+Plug 'hashivim/vim-terraform'
 
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
